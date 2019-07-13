@@ -1,15 +1,24 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.UserAuthEntity;
+import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 
+@Repository
 public class UserAuthDao {
-    public UserAuthEntity getAuthToken(String authorizationToken) {
-        return null;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    //Method receives the access token and checks if the user is logged in
+    public UserAuthEntity getAuthToken(String accessToken) {
+        try {
+            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
     }
 
-    public Date getLogoutAt() {
-        return null;
-    }
 }
